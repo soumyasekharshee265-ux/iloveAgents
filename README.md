@@ -196,12 +196,7 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 Note: AI provider API keys are still entered at runtime 
 and are never stored anywhere.
 
-However, local development may still require the following Supabase environment variables:
 
-```env
-VITE_SUPABASE_URL=...
-VITE_SUPABASE_ANON_KEY=...
-```
 ### Deploy Your Own
 
 1. Fork this repository
