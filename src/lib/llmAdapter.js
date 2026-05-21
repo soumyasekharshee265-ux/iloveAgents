@@ -264,9 +264,9 @@ export async function runAgent({ provider, model, apiKey, systemPrompt, userMess
       body: JSON.stringify(body),
     })
 
-   if (!response.ok) {
-  await handleErrorResponse(response, provider)
-}
+    if (!response.ok) {
+      await handleErrorResponse(response, provider)
+    }
 
     const data = await response.json()
     const parsed = config.parseResponse(data)
