@@ -1,3 +1,5 @@
+<<<<<<< ours
+<<<<<<< ours
 # Agent Collections: Implementation Roadmap
 
 ## Phase 1: types, constants, localStorage helpers
@@ -178,3 +180,17 @@
 - Verified production build succeeds with `npm run build`.
 - Verified the app compiles with the new collection routes, sidebar integration, agent-card picker integration, and localStorage collection hook.
 - Playwright MCP scenario validation remains pending until a Playwright MCP browser tool is available.
+=======
+=======
+>>>>>>> theirs
+# Agent Collections implementation roadmap
+
+## Phase 4: add/remove agents from collections
+
+Phase 4 was corrected to use a checkbox-based full-agent picker on the collection detail page. The picker loads the same agent registry data used by the all-agents experience, shows every available agent with search, and treats checked rows as collection members and unchecked rows as non-members.
+
+The implementation enforces collection membership through the existing collection hook actions: toggling a checked agent removes it, toggling an unchecked agent adds it, duplicate additions are ignored, and the 15-agent maximum is enforced. When a collection is full, unchecked agents are disabled with clear feedback while selected agents remain removable.
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
+<<<<<<< ours
+<<<<<<< ours
 export const MAX_COLLECTIONS = 10
 export const MAX_AGENTS_PER_COLLECTION = 15
 export const COLLECTIONS_STORAGE_KEY = 'ila_agent_collections'
@@ -54,11 +56,34 @@ export function loadCollections() {
         return true
       })
       .slice(0, MAX_COLLECTIONS)
+=======
+=======
+>>>>>>> theirs
+export const MAX_COLLECTION_AGENTS = 15
+const STORAGE_KEY = 'agentCollections'
+
+function normalizeCollection(collection) {
+  return {
+    ...collection,
+    agentIds: Array.from(new Set(collection?.agentIds || [])).filter(Boolean).slice(0, MAX_COLLECTION_AGENTS),
+  }
+}
+
+function readCollections() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+    return Array.isArray(parsed) ? parsed.map(normalizeCollection) : []
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
   } catch {
     return []
   }
 }
 
+<<<<<<< ours
+<<<<<<< ours
 export function saveCollections(collections) {
   if (typeof localStorage === 'undefined') return
   localStorage.setItem(COLLECTIONS_STORAGE_KEY, JSON.stringify(collections))
@@ -149,4 +174,68 @@ export function useCollections() {
   const isAgentInCollection = useCallback((collectionId, agentId) => Boolean(getCollectionById(collectionId)?.agentIds.includes(agentId)), [getCollectionById])
 
   return { collections, createCollection, deleteCollection, renameCollection, addAgentToCollection, removeAgentFromCollection, getCollectionById, isAgentInCollection }
+=======
+=======
+>>>>>>> theirs
+function writeCollections(collections) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(collections.map(normalizeCollection)))
+}
+
+function createFallbackCollection(collectionId) {
+  return {
+    id: collectionId,
+    name: 'Agent Collection',
+    description: 'Select agents to build this collection.',
+    agentIds: [],
+  }
+}
+
+export function useCollections() {
+  const [collections, setCollections] = useState(() => readCollections())
+
+  useEffect(() => {
+    writeCollections(collections)
+  }, [collections])
+
+  const updateCollection = useCallback((collectionId, updater) => {
+    setCollections((current) => {
+      const hasCollection = current.some((collection) => collection.id === collectionId)
+      const baseCollections = hasCollection ? current : [...current, createFallbackCollection(collectionId)]
+
+      return baseCollections.map((collection) => {
+        if (collection.id !== collectionId) return collection
+        return normalizeCollection(updater(collection))
+      })
+    })
+  }, [])
+
+  const addAgentToCollection = useCallback((collectionId, agentId) => {
+    if (!agentId) return false
+    let added = false
+
+    updateCollection(collectionId, (collection) => {
+      const agentIds = Array.from(new Set(collection.agentIds || [])).filter(Boolean)
+      if (agentIds.includes(agentId) || agentIds.length >= MAX_COLLECTION_AGENTS) {
+        return { ...collection, agentIds }
+      }
+
+      added = true
+      return { ...collection, agentIds: [...agentIds, agentId] }
+    })
+
+    return added
+  }, [updateCollection])
+
+  const removeAgentFromCollection = useCallback((collectionId, agentId) => {
+    updateCollection(collectionId, (collection) => ({
+      ...collection,
+      agentIds: (collection.agentIds || []).filter((id) => id !== agentId),
+    }))
+  }, [updateCollection])
+
+  return { collections, addAgentToCollection, removeAgentFromCollection }
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 }

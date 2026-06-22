@@ -1,3 +1,5 @@
+<<<<<<< ours
+<<<<<<< ours
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, FolderPlus, Trash2, X } from 'lucide-react'
 import agents from '../agents/registry'
@@ -29,4 +31,106 @@ export default function CollectionDetailPage() {
       {collectionAgents.map((agent) => <div key={agent.id} className="relative"><AgentCard agent={agent} /><button onClick={() => removeAgentFromCollection(collection.id, agent.id)} className="absolute bottom-3 right-3 z-10 inline-flex items-center gap-1 rounded-lg bg-white/90 px-2 py-1 text-xs font-semibold text-red-600 shadow hover:bg-red-50 dark:bg-surface-card/90 dark:hover:bg-red-500/10"><X size={13} />Remove</button></div>)}
     </div>}
   </div>
+=======
+=======
+>>>>>>> theirs
+import { useMemo } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
+import AgentCard from '../components/AgentCard'
+import CollectionAgentPicker from '../components/collections/CollectionAgentPicker'
+import { useAgents } from '../lib/useAgents'
+import { MAX_COLLECTION_AGENTS, useCollections } from '../lib/useCollections'
+import { useDocumentTitle } from '../lib/useDocumentTitle'
+
+function fallbackCollection(id) {
+  return {
+    id,
+    name: 'Agent Collection',
+    description: 'Select agents below to build this collection.',
+    agentIds: [],
+  }
+}
+
+export default function CollectionDetailPage() {
+  const { id = 'default' } = useParams()
+  const { agents, loading, error } = useAgents()
+  const { collections, addAgentToCollection, removeAgentFromCollection } = useCollections()
+
+  const collection = useMemo(() => (
+    collections.find((item) => item.id === id) || fallbackCollection(id)
+  ), [collections, id])
+
+  useDocumentTitle(collection.name ? `${collection.name} Collection` : 'Agent Collection')
+
+  const agentById = useMemo(() => new Map(agents.map((agent) => [agent.id, agent])), [agents])
+  const collectionAgents = useMemo(() => (
+    (collection.agentIds || [])
+      .map((agentId) => agentById.get(agentId))
+      .filter(Boolean)
+  ), [agentById, collection.agentIds])
+
+  const handleAddAgent = (agentId) => addAgentToCollection(collection.id, agentId)
+  const handleRemoveAgent = (agentId) => removeAgentFromCollection(collection.id, agentId)
+
+  if (loading) {
+    return <p className="text-sm text-gray-500 dark:text-text-secondary">Loading agents…</p>
+  }
+
+  if (error) {
+    return <p className="text-sm text-red-600 dark:text-red-300">Unable to load agents. Please refresh and try again.</p>
+  }
+
+  return (
+    <div className="animate-fade-in space-y-8">
+      <Link to="/" className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-accent dark:text-text-secondary">
+        <ArrowLeft size={16} />
+        Back to all agents
+      </Link>
+
+      <header className="premium-section rounded-2xl border border-gray-200 bg-white p-6 dark:border-border dark:bg-surface-card">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Agent collection</p>
+        <h1 className="mt-2 text-3xl font-bold text-gray-900 dark:text-text-primary">{collection.name}</h1>
+        {collection.description && (
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-500 dark:text-text-secondary">
+            {collection.description}
+          </p>
+        )}
+      </header>
+
+      <section>
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-text-primary">Current collection agents</h2>
+            <p className="text-sm text-gray-500 dark:text-text-secondary">Run agents directly from this curated collection.</p>
+          </div>
+          <span className="text-sm font-medium text-gray-500 dark:text-text-muted">
+            {collectionAgents.length} / {MAX_COLLECTION_AGENTS}
+          </span>
+        </div>
+
+        {collectionAgents.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {collectionAgents.map((agent) => <AgentCard key={agent.id} agent={agent} />)}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-500 dark:border-border dark:bg-surface-card dark:text-text-secondary">
+            No agents in this collection yet. Use the checklist below to add agents.
+          </div>
+        )}
+      </section>
+
+      <CollectionAgentPicker
+        collection={collection}
+        agents={agents}
+        onAddAgent={handleAddAgent}
+        onRemoveAgent={handleRemoveAgent}
+        maxAgents={MAX_COLLECTION_AGENTS}
+      />
+    </div>
+  )
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 }

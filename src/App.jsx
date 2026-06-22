@@ -17,7 +17,13 @@ import WorkflowDetail from './pages/WorkflowDetail'
 import WorkflowRunner from './pages/WorkflowRunner'
 import NotFoundPage from './pages/NotFoundPage'
 import SuitesPage from './pages/SuitesPage'
+<<<<<<< ours
+<<<<<<< ours
 import CollectionsPage from './pages/CollectionsPage'
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 import CollectionDetailPage from './pages/CollectionDetailPage'
 import ErrorBoundary from './components/ErrorBoundary'
 
@@ -58,8 +64,14 @@ export default function App() {
             <Route path="/agent/:id" element={<AgentPage />} />
             {/* Suites */}
             <Route path="/suites" element={<SuitesPage />} />
+<<<<<<< ours
+<<<<<<< ours
             {/* Collections */}
             <Route path="/collections" element={<CollectionsPage />} />
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
             <Route path="/collections/:id" element={<CollectionDetailPage />} />
             {/* Workflow routes */}
             <Route path="/workflows" element={<WorkflowLibrary />} />
